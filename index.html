@@ -1,0 +1,211 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        fieldset {
+            background-color: aqua;
+            display: flex;
+            flex-direction: column;
+        }
+
+        legend {
+            background-color: red;
+        }
+    </style>
+    <script>
+
+        const dias = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sábado'];
+        const localidades = [
+            "Alava", "Albacete", "Alicante", "Almeria", "Avila", "Badajoz", "Islas Baleares", "Barcelona",
+            "Burgos", "Caceres", "Cadiz", "Castellon", "Ciudad Real", "Cordoba", "La Coruna", "Cuenca", "Gerona",
+            "Granada", "Guadalajara", "Guipuzcoa", "Huelva", "Huesca", "Jaen", "Leon", "Lerida", "La Rioja",
+            "Lugo", "Madrid", "Malaga", "Murcia", "Navarra", "Orense", "Asturias", "Palencia", "Las Palmas",
+            "Pontevedra", "Salamanca", "Santa Cruz de Tenerife", "Cantabria", "Segovia", "Sevilla", "Soria",
+            "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora", "Zaragoza", "Ceuta", "Melilla"
+        ];
+
+        function mostrarValoracion() {
+            const input = document.getElementById('valoracion');
+            alert('Has valorado con ' + input.value + ' puntos')
+        }
+
+        function mostrarCuenta() {
+            const pais = document.getElementById('pais').value ?? '';
+            const control_iban = document.getElementById('control_iban').value ?? '';
+            const entidad = document.getElementById('entidad').value ?? '';
+            const sucursal = document.getElementById('sucursal').value ?? '';
+            const dc = document.getElementById('dc').value ?? '';
+            const cuenta = document.getElementById('cuenta').value ?? '';
+            alert('Le informamos que su cuenta bancaria es ' + pais + control_iban + '-' + entidad + '-' + sucursal + '-' + dc + '-' + cuenta)
+        }
+
+        function mostrarFecha() {
+            const input = document.getElementById('fecha');
+            const fecha = new Date(input.value);
+            alert('La fecha seleccionada en el elemento de fecha es un ' + dias[fecha.getDay()])
+        }
+
+
+        function validarCodigoPostal() {
+            const input = document.getElementById('codigo_postal');
+            const codigo = input.value;
+            try {
+                if (codigo?.length !== 5) {
+                    let message = 'El codigo postal debe tener 5 numeros'
+                    document.getElementById('codigo_postal_error').innerHTML = message;
+                    document.getElementById('codigo_postal_error').style.color = 'red'
+                    return false;
+                }
+                const codigoNumerico = parseInt(codigo);
+                document.getElementById('codigo_postal_error').innerHTML = ''
+                return true;
+            } catch (error) {
+                let message = 'El codigo postal debe ser numerico'
+                document.getElementById('codigo_postal_error').innerHTML = message;
+                document.getElementById('codigo_postal_error').style.color = 'red'
+                return false;
+            }
+        }
+
+        function validarLocalidad() {
+            const input = document.getElementById('localidad');
+            const localidad = input.value;
+            const input_codigo = document.getElementById('codigo_postal');
+            const codigo = input_codigo.value;
+            if (localidad && validarCodigoPostal()) {
+                const codigoNumerico = parseInt(codigo.substring(0, 2));
+                const localidadEsperada = localidades[codigoNumerico - 1];
+                if (localidad?.toLocaleLowerCase() !== localidadEsperada?.toLocaleLowerCase()) {
+                    let message = 'La localidad no coincide con el codigo postal'
+                    document.getElementById('localidad_error').innerHTML = message;
+                    document.getElementById('localidad_error').style.color = 'red'
+                } else {
+                    let message = 'La localidad coincide con el codigo postal'
+                    document.getElementById('localidad_error').innerHTML = message;
+                    document.getElementById('localidad_error').style.color = 'green'
+                }
+            }
+        }
+
+
+    </script>
+</head>
+
+<body>
+
+    <form>
+        <fieldset>
+            <legend>Datos Personales</legend>
+            <label for="nombre">Nombre:</label>
+            <input id="nombre" type="text" maxlength="30">
+            <label for="apellido">Apellido:</label>
+            <input id="apellido" type="text" maxlength="60">
+            <label for="direccion">Direccion:</label>
+            <input id="direccion" type="text" maxlength="60">
+            <label for="codigo_postal">Codigo Postal:</label>
+            <input id="codigo_postal" type="text" onkeyup="validarCodigoPostal()"><span id="codigo_postal_error"></span>
+            <label for="localidad">Localidad:</label>
+            </span><input id="localidad" type="text" onkeyup="validarLocalidad()"><span id="localidad_error"></span>
+        </fieldset>
+
+        <fieldset>
+            <legend>Tipo de Contratacion</legend>
+            <span>
+                <input id="nueva" name="tipo_contratacion" type="radio" value="nueva">
+                <label for="nueva">Nueva Contratacion:</label>
+            </span>
+            <span>
+                <input id="portabilidad" name="tipo_contratacion" type="radio" value="portabilidad">
+                <label for="portabilidad">Portabilidad:</label>
+            </span>
+            <span>
+                <input id="cambio" name="tipo_contratacion" type="radio" value="cambio">
+                <label for="cambio">Cambio de Contrato:</label>
+            </span>
+
+            <span>
+                <label for="compania_actual">Elija la compañia actual</label>
+                <select name="compania_actual" id="compania_actual">
+                    <option value="Movistar">Movistar</option>
+                    <option value="Orange">Orange</option>
+                    <option value="Vodafone">Vodafone</option>
+                    <option value="Yoigo">Yoigo</option>
+                    <option value="Ninguna">No Tengo Ninguna Compañía</option>
+                </select>
+
+                <label for="compania_nueva">En caso de portabilidad, elija la nueva compañia</label>
+                <select name="compania_nueva" id="compania_nueva">
+                    <option value="Movistar">Movistar</option>
+                    <option value="Orange">Orange</option>
+                    <option value="Vodafone">Vodafone</option>
+                    <option value="Yoigo">Yoigo</option>
+                </select>
+            </span>
+        </fieldset>
+
+        <fieldset>
+            <legend>Datos Bancarios</legend>
+            <label for="pais">Nombre:</label>
+            <input id="pais" type="text" readonly value="ES">
+            <span>(Sólo valido ES)</span>
+
+            <label for="control_iban">Control IBAN:</label>
+            <input id="control_iban" type="text" pattern="[0-9]{2}" placeholder="00" minlength="2" maxlength="2">
+            <span>(dos digitos)</span>
+
+            <label for="entidad">Entidad:</label>
+            <input id="entidad" type="text" pattern="[0-9]{4}" placeholder="0000" minlength="4" maxlength="4">
+            <span>(cuatro digitos)</span>
+
+            <label for="sucursal">Sucursal:</label>
+            <input id="sucursal" type="text" pattern="[0-9]{4}" placeholder="0000" minlength="4" maxlength="4">
+            <span>(cuatro digitos)</span>
+
+            <label for="dc">DC:</label>
+            <input id="dc" type="text" pattern="[0-9]{2}" placeholder="00" minlength="2" maxlength="2">
+            <span>(dos digitos)</span>
+
+            <label for="cuenta">Cuenta:</label>
+            <input id="cuenta" type="text" pattern="[0-9]{10}" placeholder="0000000000" minlength="10" maxlength="10">
+            <span>(diez digitos)</span>
+        </fieldset>
+
+
+        <fieldset>
+            <legend>Datos Estadisticos - ¿Cómo nos conoció?</legend>
+            <span>
+                <input id="tv" type="checkbox">
+                <label for="tv">A travéz de la TV:</label>
+            </span>
+            <span>
+                <input id="radio" type="checkbox">
+                <label for="radio">A travéz de la radio:</label>
+            </span>
+            <span>
+                <input id="internet" type="checkbox">
+                <label for="internet">A travéz de la internet:</label>
+            </span>
+            <span>
+                <input id="otros" type="checkbox">
+                <label for="otros">Otros:</label>
+            </span>
+            <label for="valoracion">Valoración [1-5]:</label>
+            <input id="valoracion" type="range" value="1" min="1" max="5">
+            <label for="fecha">Fecha de Encuenta:</label>
+            <input id="fecha" type="date" value="2019-01-01">
+        </fieldset>
+
+        <input type="submit" value="Enviar Datos">
+        <input type="reset" value="Borrar Datos">
+
+        <input type="button" value="Mostrar Valoración" onclick="mostrarValoracion()">
+        <input type="button" value="Mostrar Cuenta" onclick="mostrarCuenta()">
+        <input type="button" value="Mostrar Dia Semana" onclick="mostrarFecha()">
+
+    </form>
+
+</body>
+
+</html>
